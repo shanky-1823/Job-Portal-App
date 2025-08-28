@@ -1,0 +1,52 @@
+<template>
+    <lightning-card title="Job Application Form" icon-name="standard:account">
+        <div class="slds-p-around_medium">
+            <p class="slds-m-bottom_large">Please fill out the form below to apply for this position.</p>
+            
+            <lightning-input
+                label="First Name"
+                name="First_Name__c"
+                value={applicant.First_Name__c}
+                onchange={handleInputChange}
+                required>
+            </lightning-input>
+            <lightning-input
+                label="Last Name"
+                name="Last_Name__c"
+                value={applicant.Last_Name__c}
+                onchange={handleInputChange}
+                required>
+            </lightning-input>
+            <lightning-input
+                label="Email"
+                name="Email__c"
+                value={applicant.Email__c}
+                onchange={handleInputChange}
+                type="email"
+                required>
+            </lightning-input>
+            <lightning-input
+                label="Phone"
+                name="Phone__c"
+                value={applicant.Phone__c}
+                onchange={handleInputChange}
+                type="tel">
+            </lightning-input>
+            
+            <!-- File Upload -->
+            <div class="slds-m-top_large">
+                <lightning-file-upload
+                    label="Upload Resume"
+                    name="fileUploader"
+                    accept=".pdf, .docx"
+                    onuploadfinished={handleUploadFinished}>
+                </lightning-file-upload>
+            </div>
+        </div>
+        
+        <div class="slds-m-top_large slds-p-around_medium slds-text-align_center">
+            <lightning-button label="Cancel" onclick={handleCancel} class="slds-m-right_small"></lightning-button>
+            <lightning-button label="Submit Application" variant="brand" onclick={handleSubmit} disabled={isSubmitting}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

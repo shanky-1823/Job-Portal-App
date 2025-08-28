@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Screen flow to capture interview feedback and create a task for the interviewer.</description>
+    <label>Interview Feedback Flow</label>
+    <processType>Flow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Get_Application_Details</targetReference>
+        </connector>
+    </start>
+    <recordLookups>
+        <name>Get_Application_Details</name>
+        <label>Get Application Details</label>
+        <object>Application__c</object>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <screens>
+        <name>Feedback_Screen</name>
+        <label>Provide Interview Feedback</label>
+        <fields>
+            <name>Screen_Header</name>
+            <fieldText>&lt;p&gt;&lt;b&gt;Providing feedback for:&lt;/b&gt; {!Get_Application_Details.Contact__r.FirstName} {!Get_Application_Details.Contact__r.LastName}&lt;/p&gt;&lt;p&gt;&lt;b&gt;Position:&lt;/b&gt; {!Get_Application_Details.Job_Opening__r.Job_Title__c}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Overall_Rating</name>
+            <label>Overall Rating</label>
+            <fieldType>Picklist</fieldType>
+            <required>true</required>
+            <picklistValues>
+                <value>
+                    <stringValue>Strong Hire</stringValue>
+                </value>
+                <value>
+                    <stringValue>Hire</stringValue>
+                </value>
+                <value>
+                    <stringValue>No Hire</stringValue>
+                </value>
+                <value>
+                    <stringValue>Strong No Hire</stringValue>
+                </value>
+            </picklistValues>
+        </fields>
+        <fields>
+            <name>Feedback_Notes</name>
+            <label>Interview Notes</label>
+            <fieldType>TextArea</fieldType>
+            <required>false</required>
+        </fields>
+        <fields>
+            <name>Recommendation</name>
+            <label>Recommendation</label>
+            <fieldType>Picklist</fieldType>
+            <required>true</required>
+            <picklistValues>
+                <value>
+                    <stringValue>Proceed to Next Round</stringValue>
+                </value>
+                <value>
+                    <stringValue>Reject</stringValue>
+                </value>
+            </picklistValues>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+        <connector>
+            <targetReference>Create_Feedback_Record</targetReference>
+        </connector>
+    </screens>
+    <recordCreates>
+        <name>Create_Feedback_Record</name>
+        <label>Create Feedback Record</label>
+        <object>Feedback__c</object>
+        <inputAssignments>
+            <field>Application__c</field>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Rating__c</field>
+            <value>
+                <elementReference>Overall_Rating</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Notes__c</field>
+            <value>
+                <elementReference>Feedback_Notes</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Recommendation__c</field>
+            <value>
+                <elementReference>Recommendation</elementReference>
+            </value>
+        </inputAssignments>
+        <connector>
+            <targetReference>Create_Task</targetReference>
+        </connector>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Task</name>
+        <label>Create Task</label>
+        <object>Task</object>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <stringValue>Provide Interview Feedback for {!Get_Application_Details.Contact__r.Name}</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <connector>
+            <targetReference>end</targetReference>
+        </connector>
+    </recordCreates>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <end>
+        <locationX>50</locationX>
+        <locationY>600</locationY>
+    </end>
+</Flow>

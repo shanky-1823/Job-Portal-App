@@ -1,0 +1,60 @@
+<template>
+    <lightning-card title="Catalyst Careers" icon-name="custom:custom1">
+        <div class="slds-grid slds-wrap slds-p-around_medium">
+            <!-- Filter and Search Sidebar -->
+            <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-4 slds-large-size_1-of-4 slds-p-right_medium">
+                <div class="filter-sidebar slds-box">
+                    <h3 class="slds-text-heading_small slds-m-bottom_medium">Find Your Next Role</h3>
+                    <lightning-input
+                        type="search"
+                        label="Search"
+                        value={searchTerm}
+                        onchange={handleSearchChange}
+                        class="slds-m-bottom_small"
+                        placeholder="Search by Title or Location">
+                    </lightning-input>
+
+                    <lightning-combobox
+                        name="departmentFilter"
+                        label="Filter by Department"
+                        value={selectedDepartment}
+                        placeholder="Select a department"
+                        options={departmentOptions}
+                        onchange={handleDepartmentChange}>
+                    </lightning-combobox>
+                </div>
+            </div>
+
+            <!-- Job Listings and Detail View -->
+            <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_3-of-4 slds-large-size_3-of-4">
+                <!-- Conditional rendering for job list vs. detail view -->
+                <template if:true={isListView}>
+                    <template if:true={jobs.data}>
+                        <template for:each={jobs.data} for:item="job">
+                            <c-job-card key={job.Id} job={job} onselectjob={handleJobSelect}></c-job-card>
+                        </template>
+                    </template>
+                    <template if:false={jobs.data}>
+                        <div class="slds-text-align_center slds-p-around_large">
+                            <p class="slds-text-heading_medium">No job openings found.</p>
+                        </div>
+                    </template>
+                </template>
+                <template if:true={isDetailView}>
+                    <c-job-detail-page
+                        job-id={selectedJobId}
+                        onbacktosearch={handleBackToSearch}
+                        onstartapplication={handleStartApplication}>
+                    </c-job-detail-page>
+                </template>
+                <template if:true={isApplicationView}>
+                    <c-job-application-form
+                        job-id={selectedJobId}
+                        onbacktodetails={handleBackToDetails}
+                        onsuccess={handleApplicationSuccess}>
+                    </c-job-application-form>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+</template>

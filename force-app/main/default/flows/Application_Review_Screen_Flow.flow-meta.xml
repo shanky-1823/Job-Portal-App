@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Screen flow for a Hiring Manager to review a job application.</description>
+    <label>Application Review Screen Flow</label>
+    <processType>Flow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Application_Review_Screen</targetReference>
+        </connector>
+    </start>
+    <screens>
+        <name>Application_Review_Screen</name>
+        <label>Review Application</label>
+        <fields>
+            <name>Application_Details</name>
+            <fieldText>&lt;p&gt;&lt;b&gt;Application for:&lt;/b&gt; {!Get_Application.Job_Opening__r.Job_Title__c}&lt;/p&gt;&lt;p&gt;&lt;b&gt;Applicant Name:&lt;/b&gt; {!Get_Application.Contact__r.FirstName} {!Get_Application.Contact__r.LastName}&lt;/p&gt;&lt;p&gt;&lt;b&gt;Email:&lt;/b&gt; {!Get_Application.Contact__r.Email}&lt;/p&gt;&lt;p&gt;&lt;b&gt;Phone:&lt;/b&gt; {!Get_Application.Contact__r.Phone}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Review_Notes</name>
+            <label>Review Notes</label>
+            <fieldType>TextArea</fieldType>
+            <required>false</required>
+        </fields>
+        <fields>
+            <name>Application_Status</name>
+            <label>Update Status</label>
+            <fieldType>Picklist</fieldType>
+            <picklistValues>
+                <value>
+                    <stringValue>Under Review</stringValue>
+                </value>
+                <value>
+                    <stringValue>Rejected</stringValue>
+                </value>
+                <value>
+                    <stringValue>Ready for Technical Assessment</stringValue>
+                </value>
+            </picklistValues>
+            <required>false</required>
+        </fields>
+        <fields>
+            <name>Mark_as_Completed</name>
+            <label>Mark as Completed</label>
+            <fieldType>Checkbox</fieldType>
+            <required>false</required>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+        <connector>
+            <targetReference>end</targetReference>
+        </connector>
+    </screens>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <recordLookups>
+        <name>Get_Application</name>
+        <label>Get Application</label>
+        <object>Application__c</object>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <end>
+        <locationX>50</locationX>
+        <locationY>300</locationY>
+    </end>
+</Flow>

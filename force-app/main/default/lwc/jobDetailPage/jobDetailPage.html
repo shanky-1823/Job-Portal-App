@@ -1,0 +1,26 @@
+<template>
+    <lightning-card title="Job Details" icon-name="standard:work_order">
+        <div slot="actions">
+            <lightning-button label="Apply Now" variant="brand" onclick={handleApply}></lightning-button>
+        </div>
+        <div class="slds-p-around_medium">
+            <template if:true={job.data}>
+                <h2 class="slds-text-heading_large slds-m-bottom_small">{job.data.fields.Job_Title__c.value}</h2>
+                <div class="slds-m-bottom_medium">
+                    <p><strong>Department:</strong> {job.data.fields.Department__c.value}</p>
+                    <p><strong>Location:</strong> {job.data.fields.Location__c.value}</p>
+                </div>
+                <div class="slds-m-bottom_large">
+                    <h3 class="slds-text-heading_small slds-m-bottom_x-small">Job Description</h3>
+                    <lightning-formatted-rich-text value={job.data.fields.Description__c.value}></lightning-formatted-rich-text>
+                </div>
+            </template>
+            <template if:true={job.error}>
+                <div class="slds-text-color_error">Error loading job details.</div>
+            </template>
+        </div>
+        <div class="slds-m-top_large slds-text-align_center">
+            <lightning-button label="Back to Search" onclick={handleBack}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

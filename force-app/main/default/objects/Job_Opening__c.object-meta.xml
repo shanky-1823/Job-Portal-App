@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <label>Job Opening</label>
+    <nameField>
+        <label>Job Opening Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Job Openings</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+    <!-- Fields for the Job_Opening__c object -->
+    <fields>
+        <fullName>Job_Title__c</fullName>
+        <description>The title of the job opening.</description>
+        <externalId>false</externalId>
+        <label>Job Title</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Department__c</fullName>
+        <description>The department for this job opening.</description>
+        <externalId>false</externalId>
+        <label>Department</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Engineering</fullName>
+                    <default>false</default>
+                    <label>Engineering</label>
+                </value>
+                <value>
+                    <fullName>Sales</fullName>
+                    <default>false</default>
+                    <label>Sales</label>
+                </value>
+                <value>
+                    <fullName>Marketing</fullName>
+                    <default>false</default>
+                    <label>Marketing</label>
+                </value>
+                <value>
+                    <fullName>Human Resources</fullName>
+                    <default>false</default>
+                    <label>Human Resources</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Location__c</fullName>
+        <description>The location of the job.</description>
+        <externalId>false</externalId>
+        <label>Location</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <description>A detailed description of the job and responsibilities.</description>
+        <externalId>false</externalId>
+        <label>Description</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <validationRules>
+        <fullName>Restrict_Department_and_Location_Pair</fullName>
+        <active>true</active>
+        <errorConditionFormula>
+            AND(
+                ISPICKVAL(Department__c, "Sales"),
+                Location__c <> "Headquarters"
+            )
+        </errorConditionFormula>
+        <errorMessage>Sales positions can only be located at Headquarters.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Engineering_Jobs_Require_Description</fullName>
+        <active>true</active>
+        <errorConditionFormula>
+            AND(
+                ISPICKVAL(Department__c, "Engineering"),
+                ISBLANK(Description__c)
+            )
+        </errorConditionFormula>
+        <errorMessage>Engineering jobs require a detailed description.</errorMessage>
+    </validationRules>
+</CustomObject>

@@ -1,0 +1,11 @@
+<template>
+    <lightning-card class="job-card slds-m-bottom_medium" onclick={handleSelect}>
+        <div class="slds-p-around_medium">
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">{job.Job_Title__c}</h2>
+            <div class="slds-text-body_small">
+                <p><strong>Department:</strong> {job.Department__c}</p>
+                <p><strong>Location:</strong> {job.Location__c}</p>
+            </div>
+        </div>
+    </lightning-card>
+</template>
